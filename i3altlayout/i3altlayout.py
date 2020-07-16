@@ -65,6 +65,11 @@ def on_window_focus(i3, event):
     i3.command(cmd)
     log('\n')
 
+#On new window, if just 2 in container, create dwm layout
+def on_new_window(i3, event):
+    window = i3.get_tree().find_focused()
+    if len(window.workspace().leaves()) == 2:
+        i3.command('resize shrink width 10 px or 10 ppt')
 
 def write_pid(path):
     """write our pid to file"""
@@ -91,6 +96,7 @@ def main():
         print(e)
         return False
     i3.on('window::focus', on_window_focus)
+    i3.on('window::new', on_new_window)
     try:
         i3.main()
     except KeyboardInterrupt:
