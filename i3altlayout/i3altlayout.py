@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 # author: deadc0de6
 
@@ -16,17 +17,19 @@ from docopt import docopt
 NAME = 'i3altlayout'
 VERSION = '0.2'
 DEBUG = False
+AMT = 10
 USAGE = """
 {0}
 
 Usage:
-    {1} [-d] [-w] [--pid=<path>] [--socket=<path>]
+    {1} [-d] [-w] [--amt=<num>] [--pid=<path>] [--socket=<path>]
     {1} --help
     {1} --version
 
 Options:
     -d --debug          Enable debug logs.
     -w --dwm            Enable dwm splitting.
+    -a --amt=<num>      Amount of dwm splitting.
     -p --pid=<path>     Write pid to file.
     -s --socket=<path>  i3 socket path.
     -v --version        Show version.
@@ -70,7 +73,7 @@ def on_window_focus(i3, event):
 def on_new_window(i3, event):
     window = i3.get_tree().find_focused()
     if len(window.workspace().leaves()) == 2:
-        i3.command('resize shrink width 10 px or 10 ppt')
+        i3.command('resize shrink width {0} px or {0} ppt'.format(AMT))
 
 def write_pid(path):
     """write our pid to file"""
@@ -85,10 +88,15 @@ def main():
     """entry point"""
     args = docopt(USAGE, version=VERSION)
     global DEBUG
+    global AMT
     DEBUG = args['--debug']
     dwm   = args['--dwm']
+    AMT   = args['--amt']
     spath = args['--socket']
     ppath = args['--pid']
+
+    if AMT == None:
+        AMT = 10
 
     write_pid(ppath)
 
