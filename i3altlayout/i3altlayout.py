@@ -20,12 +20,13 @@ USAGE = """
 {0}
 
 Usage:
-    {1} [-d] [--pid=<path>] [--socket=<path>]
+    {1} [-d] [-w] [--pid=<path>] [--socket=<path>]
     {1} --help
     {1} --version
 
 Options:
     -d --debug          Enable debug logs.
+    -w --dwm            Enable dwm splitting.
     -p --pid=<path>     Write pid to file.
     -s --socket=<path>  i3 socket path.
     -v --version        Show version.
@@ -85,6 +86,7 @@ def main():
     args = docopt(USAGE, version=VERSION)
     global DEBUG
     DEBUG = args['--debug']
+    dwm   = args['--dwm']
     spath = args['--socket']
     ppath = args['--pid']
 
@@ -96,7 +98,8 @@ def main():
         print(e)
         return False
     i3.on('window::focus', on_window_focus)
-    i3.on('window::new', on_new_window)
+    if dwm:
+        i3.on('window::new', on_new_window)
     try:
         i3.main()
     except KeyboardInterrupt:
