@@ -95,7 +95,7 @@ def main():
     spath = args['--socket']
     ppath = args['--pid']
 
-    if AMT == None:
+    if AMT is None:
         AMT = 10
 
     write_pid(ppath)
